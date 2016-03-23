@@ -25,18 +25,22 @@ function [isradon_result] = isradon(Mf, r_ind, p_ind)
         % оператор D
         for m = 1:N_r+1
             if m == 1
-                F(k, m) = (m+0.5)*Mf(k, m+1) - 2*m*Mf(k, m);
+                %F(k, m) = (m+0.5)*Mf(k, m+1) - 2*m*Mf(k, m);
+                Mf(k, m) = (m+0.5)*Mf(k, m+1) - 2*m*Mf(k, m);
             elseif m == N_r+1
-                F(k, m) = (m-0.5)*Mf(k, m-1) - 2*m*Mf(k, m);
+                %F(k, m) = (m-0.5)*Mf(k, m-1) - 2*m*Mf(k, m);
+                Mf(k, m) = (m-0.5)*Mf(k, m-1) - 2*m*Mf(k, m);
             else
-                F(k, m) = (m+0.5)*Mf(k, m+1) + (m-0.5)*Mf(k, m-1) - 2*m*Mf(k, m);
+                %F(k, m) = (m+0.5)*Mf(k, m+1) + (m-0.5)*Mf(k, m-1) - 2*m*Mf(k, m);
+                Mf(k, m) = (m+0.5)*Mf(k, m+1) + (m-0.5)*Mf(k, m-1) - 2*m*Mf(k, m);
             end
         end
         % оператор I
         for m1 = 1:N_r+1
             summ = 0;
             for m2 = 1:N_r
-                summ = a(m1, m2)*F(k, m2) + b(m1, m2)*(F(k, m2+1)-F(k, m2))/h_r;
+                %summ = a(m1, m2)*F(k, m2) + b(m1, m2)*(F(k, m2+1)-F(k, m2))/h_r;
+                summ = a(m1, m2)*Mf(k, m2) + b(m1, m2)*(Mf(k, m2+1)-Mf(k, m2))/h_r;
             end
             F_dub(k, m1) = summ;
         end
@@ -54,13 +58,6 @@ function [isradon_result] = isradon(Mf, r_ind, p_ind)
             x(i1, i2, 2) = -R0+(i2-1)*h_x;
             f(i1, i2) = 0;
             for k = 1:N_phi+1
-                % x(i) outside the disk
-                if (x(i1, i2, 1)^2 + x(i1, i2, 2)^2 > R0^2)
-                    f(i1, i2) = 0;
-                    continue;
-                end    
-                
-                % x(i) inside the disk
                 findm = -1;
                 for m = 1:N_r
                     value = sqrt((p_ind(1, k)-x(i1, i2, 1))^2+(p_ind(2, k)-x(i1, i2, 2))^2);
