@@ -2,37 +2,27 @@ function ISRadonExample
 
     N_phi = 10;
     N_r = 10;
-    R0 = 1;
+    R0 = 10;
     h_phi = 2*pi / (N_phi + 1);
     h_r = 2 * R0 / N_r;
 
     % вычисление r_m
-    r = zeros(1, N_r+1, 'double');
-    for m = 1:N_r+1
-        r(m) = (m-1)*h_r;
-    end
-
+    r = (0:N_r).*h_r;
+    
     % вычисление p_k
     p = zeros(2, N_phi+1, 'double');
+    p(1,:) = R0*cos((0:N_phi).*h_phi);
+    p(2,:) = R0*sin((0:N_phi).*h_phi);
+    
+    f = @(x1, x2) x1.*x1;
+%   вычисление Mf(p_k, r_m)
+    n = 100;
+    Mf = zeros(N_phi+1, N_r+1, 'double');
     for k = 1:N_phi+1
-        p(1, k) = R0*cos((k-1)*h_phi);
-        p(2, k) = R0*sin((k-1)*h_phi);
+        Mf(k,:) = sradon(f, p(:,k), r, n, N_r);
+        %Mf(k,:) = sradon(f, p(:,k), r, n, N_r);
     end
-
-    f = @(x1, x2) x1*x1;
-    %result = sradon(f, [0, 0], 1);
-    %result
-%     f = @(x) x(1)*x(1);
-%     % вычисление Mf(p_k, r_m)
-    Mf = zeros(N_phi+1, N_r+1);
-    for k = 1:N_phi+1
-        for m = 1:N_r+1
-            Mf(k, m) = sradon(f, [p(1, k), p(2, k)], r(m));
-            m;
-        end
-        k;
-    end
-    Mf
+    num2str(Mf, '%15.5f')
 %     Mf = [
 %         1.0000   51.0000   13.5000 6.5556    4.1250    3.0000   2.3889    2.0204    1.7813   1.6173    1.5000;
 %         0.7077   36.3854   9.8463  4.9317    3.2116    2.4154   1.9829    1.7222    1.5529   1.4369    1.3539;
