@@ -42,18 +42,19 @@ function [isradon_result] = isradon(Mf, r_ind, p_ind, N_r, N_phi, R0)
     f = zeros(N+1, N+1, 'double');
     h_x = 2*R0 / (N+1);
     
-    x(:, :, 1) = -R0+ones(N+1,1)*(0:N).*h_x;
-    x(:, :, 2) = transpose(-R0+ones(N+1,1)*(0:N).*h_x);
+    x(:, :, 1) = -R0+ones(N+1,1)*(0:N).*h_x
+    x(:, :, 2) = transpose(-R0+ones(N+1,1)*(0:N).*h_x)
     
     for i1 = 1:N+1
         i1
-        indices = x(i1, :, 1).^2 + x(i1, :, 2).^2;
-        indices = find(indices<=R0^2);
-        for k = 1:length(indices)
-            % x(i) inside the disk
-            index = indices(k);
-            for i2 = 1:N+1
-                value = sqrt((p_ind(1,:)-x(i1, i2, 1)).^2+(p_ind(2,:)-x(i1, i2, 2)).^2);
+        for i2 = 1:N+1
+            
+            value = sqrt((p_ind(1,:)-x(i1, i2, 1)).^2+(p_ind(2,:)-x(i1, i2, 2)).^2)
+            indices = x(i1, i2, 1).^2 + x(i1, i2, 2).^2;
+            indices = find(indices<=R0^2)
+            for k = 1:length(indices)
+                % x(i) inside the disk
+                index = indices(k);
                 findm = -1;
                 for m = 1:N_r
                     if ((value(index)>=r_ind(m)) && (value(index)<r_ind(m+1)))
@@ -68,8 +69,8 @@ function [isradon_result] = isradon(Mf, r_ind, p_ind, N_r, N_phi, R0)
                 arg = sqrt((p_ind(1, index)-x(i1, i2, 1))^2+(p_ind(2, index)-x(i1, i2, 2))^2);
                 T = F_dub(index,findm)+(arg-r_ind(findm))*(F_dub(index,findm+1)-F_dub(index,findm))/h_r;
                 f(i1, i2) = f(i1, i2) + T/(N_phi+1);
-            end % end for i2
-        end % end for k
+            end % end for k
+        end % end for i2
     end % end for i1
     
     % גûגמה ג פאיכ

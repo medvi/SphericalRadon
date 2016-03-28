@@ -2,7 +2,7 @@ function ISRadonExample
 
     N_phi = 10;
     N_r = 10;
-    R0 = 10;
+    R0 = 1;
     h_phi = 2*pi / (N_phi + 1);
     h_r = 2 * R0 / N_r;
 
@@ -15,14 +15,19 @@ function ISRadonExample
     p(2,:) = R0*sin((0:N_phi).*h_phi);
     
     f = @(x1, x2) x1.*x1;
+%     
+%     integrand = @(t) transpose(f(r.*cos(t), r.*sin(t)))
+%     transpose(simpsons(integrand, 0, 2*pi, 100))
+%     transpose(simpsons(integrand, 0, 2*pi, 100))./(pi.*r.*r)
+%     sradon_result = transpose(double(transpose(simpsons(integrand, 0, 2*pi, 100))./(pi.*r.*r)))
+%     
 %   вычисление Mf(p_k, r_m)
     n = 100;
     Mf = zeros(N_phi+1, N_r+1, 'double');
     for k = 1:N_phi+1
         Mf(k,:) = sradon(f, p(:,k), r, n, N_r);
-        %Mf(k,:) = sradon(f, p(:,k), r, n, N_r);
     end
-    num2str(Mf, '%15.5f')
+    %Mf
 %     Mf = [
 %         1.0000   51.0000   13.5000 6.5556    4.1250    3.0000   2.3889    2.0204    1.7813   1.6173    1.5000;
 %         0.7077   36.3854   9.8463  4.9317    3.2116    2.4154   1.9829    1.7222    1.5529   1.4369    1.3539;
@@ -37,6 +42,6 @@ function ISRadonExample
 %         0.7077   36.3854   9.8463  4.9317    3.2116    2.4154   1.9829    1.7222    1.5529   1.4369    1.3539;
 %          ];
 %     
-%     result = isradon(Mf, r, p);
+     result = isradon(Mf, r, p, N_r, N_phi, R0);
 %     result
 end

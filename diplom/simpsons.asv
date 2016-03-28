@@ -1,15 +1,12 @@
-function I = simpsons(f,a,b,n, N_r)
-%
+function I = simpsons(f,a,b,n)
+% Подсчет определенного интеграла методом Симпсона
     h=(b-a)/n; 
     xi=a:h:b;
-    f(1);
-    arrayfun(f, [0,1], 'UniformOutput', false);
-    %g = f(xi);
-    %for i = 1:N_r+1
-    %    g = f{i}(xi);
-        %I = h/3 * (g(1)+2*sum(g(3:2:end-2))+4*sum(g(2:2:end))+g(end))
-        f1 = f(xi(1));
-        fodd = 2*sum(arrayfun(f, , 'UniformOutput', false));
-        I = h/3 * (f(xi(1))+2*sum(f(xi(3:2:end-2)))+4*sum(f(xi(2:2:end)))+f(xi(end)));
-    %end
+    f_1 = f(xi(1));
+    f_odd = 2.*sum(cell2mat(arrayfun(f, xi(3:2:end-2), 'UniformOutput', false)),2);
+    f_even = 4.*sum(cell2mat(arrayfun(f, xi(2:2:end), 'UniformOutput', false)),2);
+    f_end = f(xi(end));
+    f_1
+    f_odd+f_even+f_end
+    I = h\3*(f_1+f_odd+f_even+f_end);
 end
