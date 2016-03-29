@@ -1,7 +1,8 @@
 function ISRadonExample
 
-    N_phi = 10;
-    N_r = 10;
+    N_phi = 100;
+    N_r = 100;
+    N = 100;
     R0 = 1;
     h_phi = 2*pi / (N_phi + 1);
     h_r = 2 * R0 / N_r;
@@ -42,6 +43,6 @@ function ISRadonExample
 %         0.7077   36.3854   9.8463  4.9317    3.2116    2.4154   1.9829    1.7222    1.5529   1.4369    1.3539;
 %          ];
 %     
-     result = isradon(Mf, r, p, N_r, N_phi, R0);
+     result = isradon(Mf, r, p, N_r, N_phi, N, R0);
 %     result
 end

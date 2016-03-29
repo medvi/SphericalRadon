@@ -12,10 +12,6 @@ function [ sradon_result ] = sradon(f, point_coords, radius, n, N_r)
 %     pi .* radius .* radius
     
     sradon_result = double(transpose(simpsons(integrand, 0, 2*pi, n))) ./ (pi .* radius .* radius);
-    for i = 1:N_r+1
-        if (radius(i) == 0)
-            sradon_result(i) = double(f(point_coords(1), point_coords(2)));
-        end
-    end
+    sradon_result(sradon_result == Inf) = double(f(point_coords(1), point_coords(2)));
 end
 
