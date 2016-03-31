@@ -2,6 +2,8 @@ function [isradon_result] = isradon(Mf, r_ind, p_ind, N_r, N_phi, N, R0)
 % ISRADON
 %   f(i) = (BIDF)(i)
 
+    epsilon = 0.00001;
+
     %h_phi = 2*pi / (N_phi + 1);
     h_r = 2 * R0 / N_r;
     a = zeros(N_r+1, N_r+1);
@@ -47,20 +49,25 @@ function [isradon_result] = isradon(Mf, r_ind, p_ind, N_r, N_phi, N, R0)
     indices = x(:, :, 1).^2 + x(:, :, 2).^2;
     for i1 = 1:N+1
         i1
+        indices(i1,:);
         indices_temp = find(indices(i1,:)<=R0^2);
+        value = calvalmat(p_ind(1,:), x(i1, :, 1),p_ind(2,:), x(i1, :, 2));
+        value_epsilon = value + epsilon;
         for i2 = 1:N+1
             % x(i) inside the disk
-            value = sqrt((p_ind(1,:)-x(i1, i2, 1)).^2+(p_ind(2,:)-x(i1, i2, 2)).^2);
+            %value = sqrt((p_ind(1,:)-x(i1, i2, 1)).^2+(p_ind(2,:)-x(i1, i2, 2)).^2);
+            %value_epsilon = value + epsilon;
             for k = 1:length(indices_temp)
                 index = indices_temp(k);
-                temp = r_ind - value(index);
+                temp = r_ind - value_epsilon(i2, index);
                 temp = find(diff(sign(temp))~=0);
                 if (isempty(temp)) 
                     continue;
                 else
                     findm = temp(1);
                 end
-                arg = value(index);
+                
+                arg = value(i2, index);
                 T = interpolationT(F_dub(index,findm), r_ind(findm), F_dub(index,findm+1), h_r, arg);
                 f(i1, i2) = f(i1, i2) + T/(N_phi+1);
             end % end for k
@@ -109,4 +116,32 @@ function [isradon_result] = isradon(Mf, r_ind, p_ind, N_r, N_phi, N, R0)
 %                 T = interpolationT(F_dub(k,findm), r_ind(findm), F_dub(k,findm+1), h_r, arg);
 %                 f(i1, i2) = f(i1, i2) + T/(N_phi+1);
 %             end % end for k
+%     end % end for i1
+
+% for i1 = 1:N+1
+%         i1
+%         indices(i1,:);
+%         indices_temp = find(indices(i1,:)<=R0^2);
+%         value = calvalmat(p_ind(1,:), x(i1, :, 1),p_ind(2,:), x(i1, :, 2));
+%         value_epsilon = value + epsilon;
+%         %for i2 = 1:N+1
+%             % x(i) inside the disk
+%             %value = sqrt((p_ind(1,:)-x(i1, i2, 1)).^2+(p_ind(2,:)-x(i1, i2, 2)).^2);
+%             %value_epsilon = value + epsilon;
+%             for k = 1:length(indices_temp)
+%                 index = indices_temp(k);
+%                 %temp = r_ind - value_epsilon(i2, index);
+%                 temp = cell2mat(transpose(arrayfun(@(x)(x-value_epsilon(:,index)),r_ind,'UniformOutput',0)));
+%                 [row, col] = find(diff(sign(temp(:,:)))~=0, length(temp(:,1)));
+%                 if (isempty(row)) 
+%                     continue;
+%                 else
+%                     findm = col;
+%                 end
+%                 
+%                 arg = value(:, index);
+%                 T = interpolationT(findm, F_dub(index,:), r_ind, F_dub(index,:), h_r, arg);
+%                 f(i1, :) = f(i1, :) + T./(N_phi+1);
+%             end % end for k
+%         %end % end for i2
 %     end % end for i1

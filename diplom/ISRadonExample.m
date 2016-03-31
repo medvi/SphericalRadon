@@ -1,12 +1,18 @@
 function ISRadonExample
 
-    N_phi = 100;
-    N_r = 100;
-    N = 100;
+    N_phi = 99;
+    N_r = 99;
+    N = 99;
     R0 = 1;
     h_phi = 2*pi / (N_phi + 1);
     h_r = 2 * R0 / N_r;
 
+%    temp = [1 1 10 10; 1 1 7 8; 1 1 11 12];
+%     temp = temp - 3;
+%     sign(temp)
+%     diff(sign(temp))
+%    [row col] = find(temp==1, length(temp(:,1)))
+    
     % вычисление r_m
     r = (0:N_r).*h_r;
     
@@ -15,7 +21,7 @@ function ISRadonExample
     p(1,:) = R0*cos((0:N_phi).*h_phi);
     p(2,:) = R0*sin((0:N_phi).*h_phi);
     
-    f = @(x1, x2) x1.*x1;
+    f = @(x1, x2) x1.*x1 + x2.*x2;
 %     
 %     integrand = @(t) transpose(f(r.*cos(t), r.*sin(t)))
 %     transpose(simpsons(integrand, 0, 2*pi, 100))
