@@ -1,6 +1,6 @@
 function ISRadonExample
 
-    I = imread('images\TestFromArticle.png','png');
+    I = imread('images\TestFromArticle-grayscale.png','png');
     %N = 99;
     %I = ones(N+1,N+1);
     %I(40:60,40:60) = 0;
@@ -39,8 +39,8 @@ function ISRadonExample
 %     
 %   вычисление Mf(p_k, r_m)
     n = 100;
-    I = double(rgb2gray(I));
-    %I = ones(181,181);
+    I = rgb2
+    imshow(I);
     f = csapi({x(:,1,1),x(1,:,2)},I);
     
     Mf = zeros(N_phi+1, N_r+1, 'double');

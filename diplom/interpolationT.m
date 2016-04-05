@@ -1,6 +1,8 @@
 function [result] = interpolationT(findm, a, b, c, h_r, arg)
-    result = zeros(length(findm), 1, 'double');
+    result = cell(1, length(findm));
     for k = 1:length(findm)
-        result(k) = a(k)+(arg(k)-b(k))*(c(k+1)-a(k))/h_r;
+        p = findm(k);
+        result{k} = a(p)+(arg-b(p)).*(c(p+1)-a(p))./h_r;
     end
+    result = cell2mat(transpose(result));
 end

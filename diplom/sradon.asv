@@ -1,0 +1,22 @@
+function [ sradon_result ] = sradon(f,point_coords,radius,x,n,N_r,N)
+%SRADON Сферическое преобразование Радона
+%   Функция sradon возвращает значение сферического преобразования Радона
+%   функции f по окружности с центром в точке point_coords и радиусом
+%   radius.
+    
+    if (false)
+        integrand = @(t) transpose(f(point_coords(1)+radius.*cos(t), point_coords(2)+radius.*sin(t)));    
+        sradon_result = double(transpose(simpsons(integrand, 0, 2*pi, n))) ./ (pi .* radius .* radius);
+        sradon_result(sradon_result == Inf) = double(f(point_coords(1), point_coords(2)));
+    else
+        integrand = @(t) transpose(f(point_coords(1)+radius.*cos(t), point_coords(2)+radius.*sin(t)));    
+        fv = zeros(N+1, N+1, 'double');
+        for i = 1:N+1
+            for j = 1:N+1
+                fv(i,j) = integrand(x(i,j,1),x(i,j,2)); 
+            end
+        end
+        sradon_result = double(transpose(vector_simpsons(fv,0,2*pi)))./(pi.*radius.*radius);
+    end
+end
+
