@@ -1,16 +1,19 @@
 function ISRadonExample
 
-    I = imread('images\TestFromArticle-grayscale.png','png');
+    %I = imread('images\TestFromArticle.png','png');
+    I = double(rgb2gray(imread('images\Test2.png','png')));
+    %imshow(I)
     %N = 99;
     %I = ones(N+1,N+1);
     %I(40:60,40:60) = 0;
-    N_phi = 99;
-    N_r = 99;
+    N_phi = 49;
+    N_r = 49;
     N = size(I,1)-1;
-    R0 = 10;
+    %R0 = size(I,1)/2;
+    R0 = 1;
     h_phi = 2*pi / (N_phi + 1);
     h_r = 2*R0 / N_r;
-    h_x = 2*R0 / (N+1);
+    h_x = 2*R0 / N;
     
     % вычисление r_m
     r = (0:N_r).*h_r;
@@ -21,34 +24,25 @@ function ISRadonExample
     p(2,:) = R0*sin((0:N_phi).*h_phi);
     
     x = zeros(N+1, N+1, 2, 'double');
-    x(:, :, 1) = transpose(-R0+ones(N+1,1)*(0:N).*h_x);
-    x(:, :, 2) = -R0+ones(N+1,1)*(0:N).*h_x;
-%     
-%     integrand = @(t) transpose(f(r.*cos(t), r.*sin(t)))
-%     transpose(simpsons(integrand, 0, 2*pi, 100))
-%     transpose(simpsons(integrand, 0, 2*pi, 100))./(pi.*r.*r)
-%     sradon_result = transpose(double(transpose(simpsons(integrand, 0, 2*pi, 100))./(pi.*r.*r)))
-% 
-%     f = @(x1, x2) x1.*x1 + x2.*x2;
-%     VALUE = zeros(N+1,N+1,'double');
-%     for i = 1:N+1
-%         for j = 1:N+1
-%             VALUE(i,j) = f(x(i,j,1),x(i,j,2));
-%         end
-%     end
-%     
+     x(:, :, 1) = (-R0+ones(N+1,1)*(0:N).*h_x);
+     x(:, :, 2) = transpose((-R0+ones(N+1,1)*(0:N).*h_x));
+ 
 %   вычисление Mf(p_k, r_m)
     n = 100;
-    I = rgb2
-    imshow(I);
-    f = csapi({x(:,1,1),x(1,:,2)},I);
+    %I = double(rgb2gray(I));
+    %I = ones(181,181);
+    f = csapi({x(1,:,1),x(:,1,2)},I);
+    
+    lll = 0.6;
+    fnval(f,[lll;lll])
+    interp2(x(:,:,1),x(:,:,2),I,lll,lll)
     
     Mf = zeros(N_phi+1, N_r+1, 'double');
 %     for k = 1:N_phi+1
 %         Mf(k,:) = sradon(f,p(:,k),r,n);
 %     end
 %    Mf
-    Mf = sradon1(f,p,r,N+1,N_phi,N_r);
+    Mf = sradon1(f,p,r,x,N+1,N_phi,N_r)
     imshow(Mf)
 %     Mf = [
 %         1.0000   51.0000   13.5000 6.5556    4.1250    3.0000   2.3889    2.0204    1.7813   1.6173    1.5000;
@@ -64,6 +58,6 @@ function ISRadonExample
 %         0.7077   36.3854   9.8463  4.9317    3.2116    2.4154   1.9829    1.7222    1.5529   1.4369    1.3539;
 %          ];
 %     
-     result = isradon(Mf, r, p, x, N_r, N_phi, N, R0);
-     imshow(result)
+     %result = isradon(Mf, r, p, x, N_r, N_phi, N, R0);
+     %imshow(result)
 end
