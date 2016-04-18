@@ -7,14 +7,15 @@ function [sradon_result] = sradon1(f,point_coords,radius,grid,N,M1,M2)
         k
         if (radius(k)==0)
             %sradon_result(:,k) = double(interp2(grid(:,:,1),grid(:,:,2),f,point_coords(1,:),point_coords(2,:),'spline'));
+            
             x1 = round((point_coords(1,:)+0.5).*N);
             x1(x1<1) = 1;
             x1(x1>N) = N;
             x2 = round((point_coords(2,:)+0.5).*N);
             x2(x2<1) = 1;
             x2(x2>N) = N;
-            for m = 1:N
-                sradon_result(:,k) = f(x1(m),x2(m));
+            for m = 1:M1
+                sradon_result(m,k) = f(x1(m),x2(m));
             end
             continue;
         end
@@ -27,6 +28,7 @@ function [sradon_result] = sradon1(f,point_coords,radius,grid,N,M1,M2)
             x_(1,:) = round(N*x(1,:))/N;
             x_(2,:) = round(N*x(2,:))/N;
             %s = sum(interp2(grid(:,:,1),grid(:,:,2),f,x_(1,:),x_(2,:),'spline'));
+            
             x1 = round((x_(1,:)+0.5)*N);
             x1(x1>N) = N;
             x1(x1<=0) = 1;
@@ -41,4 +43,8 @@ function [sradon_result] = sradon1(f,point_coords,radius,grid,N,M1,M2)
         end
     end
 
+    minim = min(min(sradon_result));
+    sradon_result(:,:) = (sradon_result(:,:)-minim).*255./(255-minim);
+    
+    disp('Прямое преобразование завершено.');
 end

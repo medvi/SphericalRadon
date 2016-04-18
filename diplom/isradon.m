@@ -5,7 +5,7 @@ function [isradon_result] = isradon(Mf,r_ind,p_ind,x,N_r,N_phi,N,R0)
     epsilon = 0.00001;
 
     %h_phi = 2*pi / (N_phi + 1);
-    h_r = 2 * R0 / N_r;
+    h_r = 2*R0/N_r;
     a = zeros(N_r+1, N_r+1);
     b = zeros(N_r+1, N_r+1);
     % вычисление коэффициентов a(m, m') и b(m, m')
@@ -13,6 +13,8 @@ function [isradon_result] = isradon(Mf,r_ind,p_ind,x,N_r,N_phi,N,R0)
         a(m,:) = a_koef(r_ind+1, r_ind(m)) - a_koef(r_ind, r_ind(m));
         b(m,:) = -r_ind.*a(m,:)+0.5*(b_koef(r_ind+1, r_ind(m)) - b_koef(r_ind, r_ind(m)));
     end
+    a = abs(a);
+    b = abs(b);
     a(isnan(a))=0;
     b(isnan(b))=0;
     
@@ -40,6 +42,7 @@ function [isradon_result] = isradon(Mf,r_ind,p_ind,x,N_r,N_phi,N,R0)
     end
     % FBP with linear interpolation
     f = zeros(N+1, N+1, 'double');
+    f(:,:) = 255;
     
     % три цикла
     for i1 = 1:N+1
@@ -67,40 +70,15 @@ function [isradon_result] = isradon(Mf,r_ind,p_ind,x,N_r,N_phi,N,R0)
         end % end for i2
     end % end for i1
 
-    % два цикла
-%     for i1 = 1:N+1
-%         i1
-%         for i2 = 1:N+1
-%             if (x(i1, i2, 1)^2 + x(i1, i2, 2)^2 > R0^2)
-%                 continue;
-%             end
-%             % x(i) inside the disk
-%             %for k = 1:N_phi+1
-%                 value = sqrt((p_ind(1,:)-x(i1,i2,1)).^2+(p_ind(2,:)-x(i1,i2,2)).^2);
-%                 value = value+epsilon;
-%                 %temp = r_ind - value;
-%                 % строчка r_ind, столбец value
-%                 temp = cell2mat(transpose(arrayfun(@(x)(x-value),r_ind,'UniformOutput',0)));
-%                 [row col] = find(diff(sign(temp))~=0);
-%                 inserted_amount = N_r+1 - length(row);
-%                 row = [repmat(-1,inserted_amount,1); row];
-%                 
-%                 arg = value;
-%                 T = interpolationT2(row,F_dub,r_ind,h_r,arg,N_phi);
-%                 f(i1,i2) = f(i1,i2)+sum(T/(N_phi+1));
-%             %end % end for k
-%         end % end for i2
-%     end % end for i1
-    
     % вывод в файл
-    fileID = fopen(strcat('result_files\',num2str(N_r),'x',num2str(N_phi),'.txt'),'w');
-    fprintf(fileID,'%6s %6s %12s\n','x1','x2', 'f(x1, x2)');
-    for i1 = 1:N+1
-        for i2 = 1:N+1
-            fprintf(fileID,'%6.2f %6.2f %12.8f\n\n', x(i1, i2, 1), x(i1, i2, 2), f(i1, i2));        
-        end
-    end
-    fclose(fileID);
+%     fileID = fopen(strcat('result_files\',num2str(N_r),'x',num2str(N_phi),'.txt'),'w');
+%     fprintf(fileID,'%6s %6s %12s\n','x1','x2', 'f(x1, x2)');
+%     for i1 = 1:N+1
+%         for i2 = 1:N+1
+%             fprintf(fileID,'%6.2f %6.2f %12.8f\n\n', x(i1, i2, 1), x(i1, i2, 2), f(i1, i2));        
+%         end
+%     end
+%     fclose(fileID);
     
     isradon_result = f;
 end
@@ -166,6 +144,32 @@ end
 
 % готовая (но все равно, вроде, неправильная) версия с тремя циклами
 % for i1 = 1:N+1
+%         i1
+%         for i2 = 1:N+1
+%             if (x(i1, i2, 1)^2 + x(i1, i2, 2)^2 > R0^2)
+%                 continue;
+%             end
+%             % x(i) inside the disk
+%             for k = 1:N_phi+1
+%                 value = sqrt((p_ind(1,k)-x(i1,i2,1))^2+(p_ind(2,k)-x(i1,i2,2))^2);
+%                 value = value+epsilon;
+%                 temp = r_ind - value;
+%                 %temp = cell2mat(transpose(arrayfun(@(x)(x-value_epsilon(:,index)),r_ind,'UniformOutput',0)));
+%                 findms = find(diff(sign(temp))~=0);
+%                 if (isempty(findms)) 
+%                     continue;
+%                 else
+%                     findm = findms(1);
+%                 end
+%                 arg = value;
+%                 T = interpolationT1(F_dub(k,findm), r_ind(findm), F_dub(k,findm+1), h_r, arg);
+%                 f(i1,i2) = f(i1,i2)+T/(N_phi+1);
+%             end % end for k
+%         end % end for i2
+%     end % end for i1
+
+% % три цикла
+%     for i1 = 1:N+1
 %         i1
 %         for i2 = 1:N+1
 %             if (x(i1, i2, 1)^2 + x(i1, i2, 2)^2 > R0^2)

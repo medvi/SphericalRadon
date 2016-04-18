@@ -1,7 +1,7 @@
 function ISRadonExample
 
-    I = double(rgb2gray(imread('images\QuateredHat64.png','png')));
-    %I = double(rgb2gray(imread('images\TestFromArticle300.png','png')));
+    %I = double(rgb2gray(imread('images\QuateredHat256.png','png')));
+    I = double(rgb2gray(imread('images\TestFromArticle300.png','png')));
     N = size(I,1);
     M1 = N;
     M2 = N;
@@ -24,10 +24,9 @@ function ISRadonExample
     Mf = sradon1(I,p,r,x,N,M1,M2);
     imshow(Mf)
     im = image(Mf);
-    %imsave(im);
-    
-    result = isradon(Mf,r,p,x,M1-1,M2-1,N-1,1)
-    imshow(result)
-    im = image(result);
     imsave(im);
+    print('sradon finishes')
+    
+    %result = isradon(Mf, r, p, x, N_r, N_phi, N, R0);
+    %imshow(result)
 end
