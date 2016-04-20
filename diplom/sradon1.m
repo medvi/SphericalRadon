@@ -4,7 +4,7 @@ function [sradon_result] = sradon1(f,point_coords,radius,grid,N,M1,M2)
     n = ceil(2*pi*radius*N);
     %[left,up] = meshgrid(grid(:,1,1),grid(1,:,2));
     for k = 1:M2
-        k
+        disp(strcat(num2str(k),'/',num2str(N)));
         if (radius(k)==0)
             %sradon_result(:,k) = double(interp2(grid(:,:,1),grid(:,:,2),f,point_coords(1,:),point_coords(2,:),'spline'));
             
