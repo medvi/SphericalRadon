@@ -43,8 +43,7 @@ function [sradon_result] = sradon1(f,point_coords,radius,grid,N,M1,M2)
         end
     end
 
-    minim = min(min(sradon_result));
-    sradon_result(:,:) = (sradon_result(:,:)-minim).*255./(255-minim);
+%    minim = min(min(sradon_result));
+%    sradon_result(:,:) = (sradon_result(:,:)-minim).*255./(255-minim);
     
-    disp('Прямое преобразование завершено.');
 end
